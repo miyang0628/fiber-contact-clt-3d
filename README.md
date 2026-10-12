@@ -26,7 +26,7 @@ U-statistic, and the code validates:
 
 ```
 .
-├── data/                     # placeholder for cached inputs (empty)
+├── data/                     # Monte Carlo outputs behind the figures/tables (CSV); see data/README.md
 ├── notebooks/
 │   ├── 01_truncated_length_moments.ipynb
 │   ├── 02_contact_probability_and_rsweep.ipynb
@@ -50,6 +50,7 @@ and tables into `results/`, and uses a fixed random seed.
 | `02_contact_probability_and_rsweep` | Pairwise contact probability; `q_obs/q_pred → 1` as `r → 0` with the `1 + 8r/L̄` correction | `table_rsweep.tex`, `fig_rsweep` |
 | `03_variance_validation` | U-statistic mean and variance at `r = 0.002`, `n = 600` | `table_variance.tex` |
 | `04_asymptotic_normality` | Exhaustive counting board at `2r = 0.02`: skewness decay (log–log), histogram, normal Q–Q | `table_normality.tex`, `fig_skewness`, `fig_normal_hist`, `fig_normal_qq` |
+| `05_additional_experiments` | Finite-sample coverage of the normal approximation, Kolmogorov distance, anisotropic-orientation robustness, and computational cost | `fig_coverage`, `data/coverage.csv`, `data/ks_distance.csv`, `data/anisotropy.csv`, `data/timing.csv` |
 
 Figures are saved in grayscale at 600 dpi in both PNG and PDF, without titles or
 captions (captions live in the manuscript).
