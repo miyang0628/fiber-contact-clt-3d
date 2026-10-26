@@ -7,6 +7,7 @@ Code and notebooks reproducing the numerical results of the paper
 > — *anonymous submission, under review.*
 
 Author, affiliation, and venue information is withheld for anonymous review.
+Anonymous repository: <https://anonymous.4open.science/r/fiber-contact-clt-3d-0081/>.
 
 ## Overview
 
@@ -30,7 +31,9 @@ paper). The contact count is a degree-two `U`-statistic, and the code validates:
   flat);
 - finite-sample coverage of closed-form confidence intervals, a
   method-of-moments estimator of `r` with delta-method intervals, robustness to
-  anisotropic orientation, and computational cost.
+  anisotropic orientation, computational cost, and an **exact cell-list**
+  (linked-cell) acceleration that returns the same count as brute force and runs
+  in `O(n)` time in the fixed-density regime.
 
 Every experiment uses the **same enlarged-seeding model**; the sweep reaches
 `n = 3200`, past `n*`, so the projection-driven (boundary-induced) regime is
@@ -48,7 +51,8 @@ actually observed.
 │   ├── 04_asymptotic_normality.ipynb
 │   ├── 05_boundary_torus_dichotomy.ipynb
 │   ├── 06_coverage_and_estimation.ipynb
-│   └── 07_anisotropy_and_timing.ipynb
+│   ├── 07_anisotropy_and_timing.ipynb
+│   └── 08_cell_list.ipynb
 ├── results/
 │   ├── figures/              # generated figures (grayscale, 600 dpi, PNG + PDF)
 │   └── tables/               # generated LaTeX tables
@@ -71,6 +75,7 @@ raw outputs into `data/`, and uses a fixed random seed.
 | `05_boundary_torus_dichotomy` | Cube vs torus (equal length): `Var/C(n,2)` grows vs flat | `table_dichotomy`, `fig_dichotomy` |
 | `06_coverage_and_estimation` | Closed-form-standardized interval coverage; method-of-moments estimator of `r` with delta-method CIs | `table_coverage`, `table_estimator`, `fig_coverage` |
 | `07_anisotropy_and_timing` | Isotropic vs oblate directions; wall-clock cost | `table_anisotropy`, `table_timing` |
+| `08_cell_list` | Exact cell-list (linked-cell) acceleration; count matches brute force; `Θ(n)` in the fixed-density regime | `table_celllist_fixedwindow`, `table_celllist_fixeddensity`, `fig_celllist` |
 
 Figures are saved in grayscale (seaborn) at 600 dpi in both PNG and PDF, without
 titles or captions (captions live in the manuscript).
