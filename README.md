@@ -2,36 +2,53 @@
 
 Code and notebooks reproducing the numerical results of the paper
 
-> **Asymptotic distribution of fiber contact counts in three-dimensional
-> random fiber networks** — *anonymous submission, under review.*
+> **Fiber contact counts in three-dimensional random networks: asymptotic
+> normality, closed-form moments, and a Monte Carlo study**
+> — *anonymous submission, under review.*
 
-Author and venue information is withheld for double-blind review.
+Author, affiliation, and venue information is withheld for anonymous review.
 
 ## Overview
 
 Fibers are modeled as thin cylinders of radius `r` whose axes are random
-segments in the unit cube: uniform midpoints, isotropic directions, and a
-finite mixture of lengths. Two fibers are **in contact** when the minimum
-distance between their axes is at most `2r`. The contact count is a degree-two
-U-statistic, and the code validates:
+segments: midpoints are seeded uniformly on an **enlarged region**
+`S = [-lmax/2, 1+lmax/2]^3`, directions are isotropic, and lengths follow a
+finite mixture. Two fibers are **in contact** when the minimum distance between
+their axes is at most `2r` **and** the closest-point midpoint lies in the unit
+cube `C = [0,1]^3` (the boundary-correcting seeding/counting convention of the
+paper). The contact count is a degree-two `U`-statistic, and the code validates:
 
 - the closed-form cube-truncated length moments `λ₁, λ₂, Var(ℓ_C)` and the
   isotropic mean sine `E[sin γ] = π/4`;
-- the boundary-corrected mean and the variance formula;
-- the leading contact-probability constant and its finite-`r` correction
-  `1 + 8r/L̄`;
-- convergence of the standardized contact count to the standard normal law.
+- the closed-form mean and variance, including the finite-`r` end-term
+  correction `1 + 8r/L̄` and its square on the projection variance `ζ₁`;
+- the leading contact-probability constant and its approach to `1 + 8r/L̄`;
+- convergence of the standardized contact count to the standard normal law,
+  the two variance components, and the crossover scale `n* = |C|/(2πr·Var(ℓ_C))`;
+- the cube-versus-torus **dichotomy** (equal-length fibers): the boundary makes
+  the limit Gaussian (`Var/C(n,2)` grows), the torus is degenerate (`Var/C(n,2)`
+  flat);
+- finite-sample coverage of closed-form confidence intervals, a
+  method-of-moments estimator of `r` with delta-method intervals, robustness to
+  anisotropic orientation, and computational cost.
+
+Every experiment uses the **same enlarged-seeding model**; the sweep reaches
+`n = 3200`, past `n*`, so the projection-driven (boundary-induced) regime is
+actually observed.
 
 ## Repository layout
 
 ```
 .
-├── data/                     # Monte Carlo outputs behind the figures/tables (CSV); see data/README.md
+├── data/                     # Monte Carlo outputs behind the figures/tables (CSV, NPZ)
 ├── notebooks/
 │   ├── 01_truncated_length_moments.ipynb
 │   ├── 02_contact_probability_and_rsweep.ipynb
 │   ├── 03_variance_validation.ipynb
-│   └── 04_asymptotic_normality.ipynb
+│   ├── 04_asymptotic_normality.ipynb
+│   ├── 05_boundary_torus_dichotomy.ipynb
+│   ├── 06_coverage_and_estimation.ipynb
+│   └── 07_anisotropy_and_timing.ipynb
 ├── results/
 │   ├── figures/              # generated figures (grayscale, 600 dpi, PNG + PDF)
 │   └── tables/               # generated LaTeX tables
@@ -41,19 +58,22 @@ U-statistic, and the code validates:
 
 ## Notebooks
 
-Each notebook is self-contained (all code in a single cell), writes its figures
-and tables into `results/`, and uses a fixed random seed.
+Each notebook is self-contained (all code in a single cell), begins with a
+comment giving its name, writes its figures and tables into `results/` and its
+raw outputs into `data/`, and uses a fixed random seed.
 
-| Notebook | Reproduces | Outputs |
+| Notebook | Reproduces | Main outputs |
 |---|---|---|
-| `01_truncated_length_moments` | Closed-form vs Monte Carlo moments `λ₁, λ₂, Var(ℓ_C)` and `E[sin γ] = π/4` | `table_moments.tex`, `fig_ellC_hist` |
-| `02_contact_probability_and_rsweep` | Pairwise contact probability; `q_obs/q_pred → 1` as `r → 0` with the `1 + 8r/L̄` correction | `table_rsweep.tex`, `fig_rsweep` |
-| `03_variance_validation` | U-statistic mean and variance at `r = 0.002`, `n = 600` | `table_variance.tex` |
-| `04_asymptotic_normality` | Exhaustive counting board at `2r = 0.02`: skewness decay (log–log), histogram, normal Q–Q | `table_normality.tex`, `fig_skewness`, `fig_normal_hist`, `fig_normal_qq` |
-| `05_additional_experiments` | Finite-sample coverage of the normal approximation, Kolmogorov distance, anisotropic-orientation robustness, and computational cost | `fig_coverage`, `data/coverage.csv`, `data/ks_distance.csv`, `data/anisotropy.csv`, `data/timing.csv` |
+| `01_truncated_length_moments` | Closed-form vs Monte Carlo `λ₁, λ₂, Var(ℓ_C)`, `E[sin γ] = π/4` | `table_moments`, `fig_ellC_hist` |
+| `02_contact_probability_and_rsweep` | Pairwise contact probability with MC standard errors; `q_obs/q_pred → 1 + 8r/L̄` | `table_rsweep`, `fig_rsweep` |
+| `03_variance_validation` | `U`-statistic mean and variance at `r = 0.002, n = 600`; crossover scale `n*` | `variance_validation.csv` |
+| `04_asymptotic_normality` | Distribution of `N_n` (n = 200…3200); summary table and variance decomposition | `table_normality`, `table_variance_split`, `fig_skewness`, `fig_normal_hist`, `fig_normal_qq`, `fig_varsplit`, `normality_counts.npz` |
+| `05_boundary_torus_dichotomy` | Cube vs torus (equal length): `Var/C(n,2)` grows vs flat | `table_dichotomy`, `fig_dichotomy` |
+| `06_coverage_and_estimation` | Closed-form-standardized interval coverage; method-of-moments estimator of `r` with delta-method CIs | `table_coverage`, `table_estimator`, `fig_coverage` |
+| `07_anisotropy_and_timing` | Isotropic vs oblate directions; wall-clock cost | `table_anisotropy`, `table_timing` |
 
-Figures are saved in grayscale at 600 dpi in both PNG and PDF, without titles or
-captions (captions live in the manuscript).
+Figures are saved in grayscale (seaborn) at 600 dpi in both PNG and PDF, without
+titles or captions (captions live in the manuscript).
 
 ## Setup
 
@@ -65,28 +85,31 @@ pip install -r requirements.txt
 jupyter lab      # or: jupyter notebook
 ```
 
-Run the notebooks in order. Notebooks `03` and `04` are simulation-heavy and
-take a few minutes each at the default replicate counts; raise `reps` (notebook
-`04`) and `target_hits` (notebook `02`) for publication-quality estimates. The
-figures shipped with the paper use 8000 replicates for `n ≤ 400` and 3500 for
-`n = 800`.
+Run the notebooks in order. Notebook `06` reads `data/normality_counts.npz`
+written by notebook `04`, so run `04` before `06`.
 
 ## Reproducibility notes
 
 - All randomness is seeded (`numpy.random.default_rng`), so a fresh run
   reproduces the reported numbers up to Monte Carlo error.
+- The replicate counts committed here are **lighter** than those used for the
+  paper, so the notebooks execute in a few minutes each. Each simulation-heavy
+  notebook states its publication replicate counts in a comment (e.g.\ notebook
+  `04` uses `R = 6000, 5000, 3500, 1800, 700` for `n = 200, 400, 800, 1600,
+  3200`; notebook `02` uses `40000` target contacts per radius). Raising the
+  replicate counts to those values reproduces the published tables and figures.
 - The segment–segment distance uses the standard clamped (Lumelsky) scheme,
   vectorized over pairs.
-- Closed-form and simulated moments agree to three significant figures; the
-  finite-`r` discrepancies in the mean and variance are the `O(r)`
-  spherocylinder end term documented in the manuscript appendix.
+- `ζ₁` is reported with the finite-`r` enhancement `(1 + 8r/L̄)²`; this is the
+  form that matches the observed variance and calibrates the confidence
+  intervals.
 
 ## Citation
 
 ```
 @misc{anonymous_fiber_contact_3d,
-  title  = {Asymptotic distribution of fiber contact counts in
-            three-dimensional random fiber networks},
+  title  = {Fiber contact counts in three-dimensional random networks:
+            asymptotic normality, closed-form moments, and a Monte Carlo study},
   author = {Anonymous},
   year   = {2026},
   note   = {Anonymous submission, under review}
